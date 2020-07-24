@@ -1,5 +1,5 @@
 # test-konvavue
-
+link to try it : https://vuekonva-hakamate.netlify.app/rectchild
 ## Project setup
 ```
 yarn install
