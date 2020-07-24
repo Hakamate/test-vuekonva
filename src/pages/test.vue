@@ -9,6 +9,7 @@
       <v-text :config="timerConfig" />
       <v-text :config="scoreConfig" />
       <v-text :config="bestScoreConfig" />
+      <v-text :config="playAgainConfig" @click="setNewGame"/>
       <v-circle v-for="item in circles" :key="item.id" :config="item" />
     </v-layer>
   </v-stage>
@@ -17,8 +18,10 @@
 <script>
 const width = window.innerWidth;
 const height = window.innerHeight - 80; // 80 -> nav Height
-let maxSize = height / 4;
-let timer = 10000;
+const maxSizeOption = height / 4;
+const timerOption = 10000;
+let maxSize = maxSizeOption;
+let timer = timerOption;
 
 import Konva from "konva";
 
@@ -42,7 +45,6 @@ export default {
         text: this.score ? "Score : " + this.score : "Score : 0",
         x: 5,
         y: height - 20,
-        fill: "red",
         fontSize: 20,
         fontStyle: "bold",
       },
@@ -50,6 +52,14 @@ export default {
         text: "Best Score : " + this.bestScore,
         x: 5,
         y: 5,
+        fill: "black",
+        fontSize: 20,
+        fontStyle: "bold",
+      },
+      playAgainConfig: {
+        text: "Play Again",
+        x: -500,
+        y: 50,
         fill: "red",
         fontSize: 20,
         fontStyle: "bold",
@@ -91,8 +101,9 @@ export default {
       this.playInterval = setInterval(() => {
         if (this.actualTimer > 0) {
           this.actualTimer -= 100;
-          this.timerConfig.text = `Time : ${Math.round(this.actualTimer) /
-            1000} s`;
+          this.timerConfig.text = `Time : ${
+            Math.round(this.actualTimer)
+          } ms`;
           this.checkForNextRound();
         }
       }, 100);
@@ -107,18 +118,22 @@ export default {
         this.runRound(); // next round
       } else if (this.actualTimer <= 0) {
         clearInterval(this.playInterval);
-        this.checkForBestScore()
-        alert(
-          `You lose with a score of : ${this.score} \nClick "OK" to play again`
-        );
+        this.checkForBestScore();
+
+        // print play button
+        this.playAgainConfig.x = width/2
+
+        // alert(
+        //   `You lose with a score of : ${this.score} \nClick "OK" to play again`
+        // );
       }
     },
 
     createCircle(sizeCircle) {
       for (let index = 0; index < 5; index++) {
         this.circles.push({
-          x: this.getRandomInt(maxSize / 2, width - maxSize / 2),
-          y: this.getRandomInt(maxSize / 2, height - maxSize / 2),
+          x: this.getRandomInt((maxSize/2 + 40), (width - maxSize/2 - 20)), // 40 = best + time Height 20 = score Height
+          y: this.getRandomInt((maxSize/2), (height - maxSize/2)),
           width: sizeCircle,
           height: sizeCircle,
           name: "circle" + index,
@@ -135,11 +150,10 @@ export default {
       }
     },
 
-    checkForBestScore(){
-      if(this.score > this.bestScore){
+    checkForBestScore() {
+      if (this.score > this.bestScore) {
         this.bestScore = this.score;
-        this.bestScoreConfig.text = "Best Score : " + this.bestScore
-        console.log
+        this.bestScoreConfig.text = "Best Score : " + this.bestScore;
       }
     },
 
@@ -147,6 +161,18 @@ export default {
       maxSize = maxSize * 0.85;
       timer = timer * 0.85;
       this.actualTimer = timer;
+    },
+
+    setNewGame(){
+      this.playAgainConfig.x = -500
+
+      timer = timerOption
+      maxSize = maxSizeOption
+      this.actualTimer = timer
+      this.score = 0
+      this.circles = []
+      
+      this.runRound()
     },
 
     getRandomInt(minInt, maxInt) {
