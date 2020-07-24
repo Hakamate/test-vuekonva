@@ -9,7 +9,7 @@
       <v-text :config="timerConfig" />
       <v-text :config="scoreConfig" />
       <v-text :config="bestScoreConfig" />
-      <v-text :config="playAgainConfig" @click="setNewGame"/>
+      <v-text :config="playAgainConfig" @click="setNewGame" @touchstart="setNewGame"/>
       <v-circle v-for="item in circles" :key="item.id" :config="item" />
     </v-layer>
   </v-stage>
