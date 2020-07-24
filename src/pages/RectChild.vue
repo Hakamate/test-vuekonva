@@ -18,7 +18,6 @@
         }"
       />
       <v-rect v-for="item in rectangles" :key="item.id" :config="item" />
-      <v-transformer ref="transformer" />
     </v-layer>
   </v-stage>
 </template>
@@ -28,7 +27,7 @@
 const width = window.innerWidth;
 const height = window.innerHeight - 80; // 80 -> nav Height
 let maxSize = height / 4;
-const crazyModeInterval = 1000;
+const crazyModeInterval = 500;
 
 import Konva from "konva";
 
@@ -64,9 +63,10 @@ export default {
       // find clicked rect by its name
       const name = e.target.name();
       const rect = this.rectangles.find((r) => r.name === name);
-      if (rect) this.selectedShapeName = name;
-
-      this.rectExplode(rect);
+      if (rect) {
+        this.selectedShapeName = name;
+        this.rectExplode(rect);
+      }
     },
 
     rectExplode(rect) {
