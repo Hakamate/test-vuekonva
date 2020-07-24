@@ -1,15 +1,20 @@
-import Konva from './pages/RectChild.vue'
-import test from './pages/test'
+import RectChild from './pages/RectChild'
+import CircleShoot from './pages/CircleShoot'
 
 export default [
     {
         name: "RectChild",
         path: "/rectchild",
-        component: Konva
+        component: RectChild
     },
     {
-        name: "test",
-        path: "/test",
-        component: test
+        name: "Home",
+        path: "/",
+        redirect: "/rectchild",
+    },
+    {
+        name: "CircleShoot",
+        path: "/circleshoot",
+        component: CircleShoot
     }
 ]

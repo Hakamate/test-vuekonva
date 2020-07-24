@@ -24,10 +24,10 @@
             RectChild
           </router-link>
           <router-link
-            to="/test"
+            to="/circleshoot"
             class="block lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
           >
-            Test
+            CircleShoot
           </router-link>
         </div>
       </div>
