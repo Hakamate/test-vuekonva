@@ -17,7 +17,7 @@
 
 <script>
 const width = window.innerWidth;
-const height = window.innerHeight - 80; // 80 -> nav Height
+const height = window.innerHeight - 78; // 78 -> nav Height
 const maxSizeOption = height / 4;
 const timerOption = 10000;
 let maxSize = maxSizeOption;

@@ -25,7 +25,7 @@
 <script>
 
 const width = window.innerWidth;
-const height = window.innerHeight - 80; // 80 -> nav Height
+const height = window.innerHeight - 78; // 78 -> nav Height
 let maxSize = height / 4;
 const crazyModeInterval = 500;
 
