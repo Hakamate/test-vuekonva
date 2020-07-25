@@ -33,7 +33,11 @@ export default {
         height: height,
       },
       circles: [],
+      configs:[{
+        // TODO: use v-for to group all config
+      }],
       timerConfig: {
+        name: 'timer',
         text: "Time : " + timer,
         x: 5,
         y: 30,
@@ -42,6 +46,7 @@ export default {
         fontStyle: "bold",
       },
       scoreConfig: {
+        name: "score",
         text: this.score ? "Score : " + this.score : "Score : 0",
         x: 5,
         y: height - 20,
@@ -49,6 +54,7 @@ export default {
         fontStyle: "bold",
       },
       bestScoreConfig: {
+        name:"bestscore",
         text: "Best Score : " + this.bestScore,
         x: 5,
         y: 5,
@@ -57,6 +63,7 @@ export default {
         fontStyle: "bold",
       },
       playAgainConfig: {
+        name: 'playagain',
         text: "Play Again",
         x: -500,
         y: 50,
