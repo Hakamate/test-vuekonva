@@ -6,10 +6,33 @@
     @touchstart="handleStageMouseDown"
   >
     <v-layer ref="layer">
-      <v-text :config="timerConfig" />
-      <v-text :config="scoreConfig" />
-      <v-text :config="bestScoreConfig" />
-      <v-text :config="playAgainConfig" @click="setNewGame" @touchstart="setNewGame"/>
+      <v-text
+        :config="{
+        text: 'Best Score : ' + bestScore, x: 5, y: 5,
+        fontSize: 20, fontStyle: 'bold',
+      }"
+      />
+      <v-text
+        :config="{
+        text: 'Score : ' + score, x: 5, y: 23, 
+        fontSize: 20, fontStyle: 'bold',
+      }"
+      />
+      <v-text
+        :config="{
+        text: 'Time : ' + (actualTimer/1000 < 0 ? 0 : Math.round(actualTimer/100)/10), 
+        x: 5, y: 41, fill: 'red', fontSize: 20, fontStyle: 'bold',
+      }"
+      />
+      <v-text
+        :config="{
+        text: 'Play Again', x: xPlayAgain, y: 50, fill: 'red',
+        fontSize: 20, fontStyle: 'bold',
+      }"
+        @touchstart="setNewGame"
+        @click="setNewGame"
+      />
+
       <v-circle v-for="item in circles" :key="item.id" :config="item" />
     </v-layer>
   </v-stage>
@@ -33,49 +56,17 @@ export default {
         height: height,
       },
       circles: [],
-      configs:[{
-        // TODO: use v-for to group all config
-      }],
-      timerConfig: {
-        name: 'timer',
-        text: "Time : " + timer,
-        x: 5,
-        y: 30,
-        fill: "red",
-        fontSize: 20,
-        fontStyle: "bold",
-      },
-      scoreConfig: {
-        name: "score",
-        text: this.score ? "Score : " + this.score : "Score : 0",
-        x: 5,
-        y: height - 20,
-        fontSize: 20,
-        fontStyle: "bold",
-      },
-      bestScoreConfig: {
-        name:"bestscore",
-        text: "Best Score : " + this.bestScore,
-        x: 5,
-        y: 5,
-        fill: "black",
-        fontSize: 20,
-        fontStyle: "bold",
-      },
-      playAgainConfig: {
-        name: 'playagain',
-        text: "Play Again",
-        x: -500,
-        y: 50,
-        fill: "red",
-        fontSize: 20,
-        fontStyle: "bold",
-      },
+      configs: [
+        {
+          // TODO: use v-for to group all config
+        },
+      ],
       selectedShapeName: "",
       score: 0,
       bestScore: 0,
       playInterval: null,
       actualTimer: timer,
+      xPlayAgain: -500,
     };
   },
   mounted() {
@@ -108,9 +99,6 @@ export default {
       this.playInterval = setInterval(() => {
         if (this.actualTimer > 0) {
           this.actualTimer -= 100;
-          this.timerConfig.text = `Time : ${
-            Math.round(this.actualTimer)
-          } ms`;
           this.checkForNextRound();
         }
       }, 100);
@@ -128,7 +116,7 @@ export default {
         this.checkForBestScore();
 
         // print play button
-        this.playAgainConfig.x = width/2
+        this.xPlayAgain = width / 2;
 
         // alert(
         //   `You lose with a score of : ${this.score} \nClick "OK" to play again`
@@ -139,8 +127,8 @@ export default {
     createCircle(sizeCircle) {
       for (let index = 0; index < 5; index++) {
         this.circles.push({
-          x: this.getRandomInt((maxSize/2 + 40), (width - maxSize/2 - 20)), // 40 = best + time Height 20 = score Height
-          y: this.getRandomInt((maxSize/2), (height - maxSize/2)),
+          x: this.getRandomInt(maxSize / 2 + 40, width - maxSize / 2 - 20), // 40 = best + time Height 20 = score Height
+          y: this.getRandomInt(maxSize / 2, height - maxSize / 2),
           width: sizeCircle,
           height: sizeCircle,
           name: "circle" + index,
@@ -151,8 +139,7 @@ export default {
 
     updateScore() {
       if (this.actualTimer > 0) {
-        this.score = this.score + 1;
-        this.scoreConfig.text = "Score : " + this.score;
+        this.score += 1;
         this.checkForNextRound();
       }
     },
@@ -160,7 +147,6 @@ export default {
     checkForBestScore() {
       if (this.score > this.bestScore) {
         this.bestScore = this.score;
-        this.bestScoreConfig.text = "Best Score : " + this.bestScore;
       }
     },
 
@@ -170,16 +156,16 @@ export default {
       this.actualTimer = timer;
     },
 
-    setNewGame(){
-      this.playAgainConfig.x = -500
+    setNewGame() {
+      this.xPlayAgain = -500;
 
-      timer = timerOption
-      maxSize = maxSizeOption
-      this.actualTimer = timer
-      this.score = 0
-      this.circles = []
-      
-      this.runRound()
+      timer = timerOption;
+      maxSize = maxSizeOption;
+      this.actualTimer = timer;
+      this.score = 0;
+      this.circles = [];
+
+      this.runRound();
     },
 
     getRandomInt(minInt, maxInt) {
