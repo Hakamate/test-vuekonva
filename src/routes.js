@@ -1,5 +1,6 @@
 import RectChild from './pages/RectChild'
 import CircleShoot from './pages/CircleShoot'
+import Snake from './pages/Snake'
 
 export default [
     {
@@ -17,6 +18,10 @@ export default [
         name: "CircleShoot",
         path: "/circleshoot",
         component: CircleShoot
-
+    },
+    {
+        name: "Snake",
+        path: "/snake",
+        component: Snake
     },
 ]
