@@ -1,5 +1,5 @@
 import RectChild from './pages/RectChild'
-import CircleShoot from './pages/CircleShoot'
+import Home from './pages/Home'
 
 export default [
     {
@@ -10,11 +10,7 @@ export default [
     {
         name: "Home",
         path: "/",
-        redirect: "/rectchild",
+        component: Home
+
     },
-    {
-        name: "CircleShoot",
-        path: "/circleshoot",
-        component: CircleShoot
-    }
 ]

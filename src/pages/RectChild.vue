@@ -4,26 +4,32 @@
     :config="stageSize"
     @click="handleStageMouseDown"
     @touchstart="handleStageMouseDown"
-    @dblclick="crazyMod"
+    @dblclick="crazyMode"
   >
     <v-layer ref="layer">
       <v-text
         :config="{
-          text: crazyMode ? 'Crazy Mode !' : '',
-          x: 5,
-          y: 5,
-          fill: 'red',
-          fontSize: 20,
-          fontStyle: 'bold',
+          text: `Rectangle(s) : ${rectangles.length}`,
+          x: 5, y: 5, fontSize: 20, fontStyle: 'bold',
         }"
       />
+      <v-text
+        :config="{
+          text: crazyModeBool ? 'Crazy Mode !' : '',
+          x: 5, y: 25, fill: 'red',
+          fontSize: 15, fontStyle: 'bold',
+        }"
+      />
+      <!-- 
+        We also can do this to print text
+        <v-text v-for="item in configText" :key="item.id" :config="item"/> 
+      -->
       <v-rect v-for="item in rectangles" :key="item.id" :config="item" />
     </v-layer>
   </v-stage>
 </template>
 
 <script>
-
 const width = window.innerWidth;
 const height = window.innerHeight - 78; // 78 -> nav Height
 let maxSize = height / 4;
@@ -38,18 +44,21 @@ export default {
         width: width,
         height: height,
       },
+      configText: [
+        // use it if you want to v-for text
+      ],
       rectangles: [
         {
           x: this.getRandomInt(width - maxSize),
           y: this.getRandomInt(height - maxSize),
           width: maxSize,
           height: maxSize,
-          fill: "red",
+          fill: Konva.Util.getRandomColor(),
           name: "rect1",
         },
       ],
       selectedShapeName: "",
-      crazyMode: false,
+      crazyModeBool: false,
       intervalCrazyMode: null,
     };
   },
@@ -91,9 +100,9 @@ export default {
       }
     },
 
-    crazyMod() {
-      if (this.crazyMode === false) {
-        this.crazyMode = true;
+    crazyMode() {
+      if (this.crazyModeBool === false) {
+        this.crazyModeBool = true;
 
         // change rectangles positions every time (crazyModeInterbal it's a duration)
         this.intervalCrazyMode = setInterval(() => {
@@ -104,14 +113,21 @@ export default {
         }, crazyModeInterval);
       } else {
         clearInterval(this.intervalCrazyMode);
-        this.crazyMode = false;
+        this.crazyModeBool = false;
       }
     },
 
+    // allow to use all canvas space
     getMaxRectSizeForCanvasSize() {
       // get the biggest rect width
-      const maxSizeInArray = Math.max.apply(Math, this.rectangles.map((r) => { return r.width; }))
-      if (maxSizeInArray < maxSize && maxSizeInArray !== -Infinity) maxSize = maxSizeInArray
+      const maxSizeInArray = Math.max.apply(
+        Math,
+        this.rectangles.map((r) => {
+          return r.width;
+        })
+      );
+      if (maxSizeInArray < maxSize && maxSizeInArray !== -Infinity)
+        maxSize = maxSizeInArray;
     },
 
     getRandomInt(maxInt) {
