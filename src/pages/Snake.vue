@@ -21,6 +21,7 @@
     </v-layer>
 
     <v-layer>
+      <v-rect :config="food" />
       <v-rect v-for="item in snake" :key="item.id" :config="item" />
     </v-layer>
   </v-stage>
@@ -29,8 +30,13 @@
 <script>
 const width = window.innerWidth;
 const height = window.innerHeight - 78; // 78 -> nav Height
-const caseByColAndRow = 30;
-const sizeSnake = (height < width ? height : width) / caseByColAndRow;
+const caseByColAndRow = 20;
+const sizeSnake = Math.round((height < width ? height : width) / caseByColAndRow);
+const snakeColor = "#38b2ac";
+const snakeColor2 = '#00867f'
+const colormap = "rgb(205, 205, 205)";
+
+
 
 export default {
   data() {
@@ -45,26 +51,38 @@ export default {
       map: [],
       snake: [
         {
-          x: this.getRandomInt(caseByColAndRow) * sizeSnake,
-          y: this.getRandomInt(caseByColAndRow) * sizeSnake,
+          x: 2 * sizeSnake, // this.getRandomInt(caseByColAndRow) * sizeSnake,
+          y: 0, // this.getRandomInt(caseByColAndRow) * sizeSnake,
           width: sizeSnake,
           height: sizeSnake,
-          fill: "#38b2ac",
-          name: "rect1",
+          fill: snakeColor,
         },
       ],
+      food: {
+        x: this.getRandomInt(caseByColAndRow) * sizeSnake,
+        y: this.getRandomInt(caseByColAndRow) * sizeSnake,
+        width: sizeSnake,
+        height: sizeSnake,
+        fill: 'red',
+        },
       selectedShapeName: "",
       directionKey: "d",
     };
   },
 
   mounted() {
-    window.addEventListener("keyup", (event) => {
-      this.moveSnake(event.key);
-    });
+    window.addEventListener(
+      "keyup",
+      (event) => (this.directionKey = event.key)
+    );
 
     this.createMap();
+
+    setInterval(() => {
+      this.playGame();
+    }, 100);
   },
+
   methods: {
     handleStageMouseDown(e) {
       // if any rect are clicked
@@ -81,57 +99,95 @@ export default {
       }
     },
 
-    moveSnake(key) {
-      console.log(key);
-      this.directionKey = key;
-      // ZQSD 90 top 115 bottom 113 left 100 right
-      switch (key) {
-        case "z":
-          console.log(this.snake.y);
-          this.snake.y -= sizeSnake;
-          console.log(this.snake.y);
+    playGame() {
+      let oldHead = {
+        x: this.snake[0].x,
+        y: this.snake[0].y,
+      };
+
+      switch (this.directionKey) {
+        case "ArrowUp":
+          oldHead.y -= sizeSnake;
           break;
-        case "s":
-          console.log("bottom");
-          this.snake.y += sizeSnake;
+        case "ArrowDown":
+          oldHead.y += sizeSnake;
           break;
-        case "q":
-          console.log("left");
-          this.snake.x -= sizeSnake;
+        case "ArrowLeft":
+          oldHead.x -= sizeSnake;
           break;
-        case "d":
-          console.log("right");
-          this.snake.x += sizeSnake;
+        case "ArrowRight":
+          oldHead.x += sizeSnake;
           break;
         default:
           break;
       }
+
+      this.updateGame(oldHead);
+    },
+
+    updateGame(snakeHead) {
+
+      // check if snake bit itself
+      this.biteTail(snakeHead)
+
+      if(!this.foodTouch(snakeHead))
+        this.snake.pop();
+      else {
+        this.food.x = this.getRandomInt(caseByColAndRow) * sizeSnake
+        this.food.y = this.getRandomInt(caseByColAndRow) * sizeSnake
+      }
+
+      if (snakeHead.x >= caseByColAndRow*sizeSnake)
+        snakeHead.x = 0
+      else if (snakeHead.x < 0)
+        snakeHead.x = caseByColAndRow*sizeSnake - sizeSnake
+      else if (snakeHead.y >= caseByColAndRow*sizeSnake) 
+        snakeHead.y = 0 
+      else if (snakeHead.y < 0)
+        snakeHead.y = caseByColAndRow*sizeSnake - sizeSnake
+
+      this.snake.unshift({
+        x: snakeHead.x,
+        y: snakeHead.y,
+        width: sizeSnake,
+        height: sizeSnake,
+        fill: this.snake.length %2 ? snakeColor2 : snakeColor,
+      });
+    },
+
+    foodTouch(snakeHead){
+      return (this.food.x === snakeHead.x && this.food.y === snakeHead.y) ? true : false
+    },
+
+    biteTail(snakeHead){
+      this.snake.forEach((snakeSquare,index) => {
+        if(this.snake.length > 1 && index > 0 && snakeSquare.x === snakeHead.x && snakeSquare.y === snakeHead.y)
+          this.replayGame()
+      })
+    },
+
+    replayGame(){
+      this.snake.splice(1)
     },
 
     createMap() {
-      console.log(this.snake.y);
-      const smallerInt = this.getSmaller(height, width);
-      const colAndRowNumber = smallerInt / caseByColAndRow;
       let lastX = 0;
       let lastY = 0;
-      let color1choose = "rgb(218, 218, 218)";
-      let color2choose = "rgb(205, 205, 205)";
 
       for (let index = 0; index < caseByColAndRow; index++) {
         for (let index = 0; index < caseByColAndRow; index++) {
           this.map.push({
             x: lastX,
             y: lastY,
-            width: colAndRowNumber,
-            height: colAndRowNumber,
-            fill: index % 2 ? color1choose : color2choose,
+            width: sizeSnake,
+            height: sizeSnake,
+            fill: colormap,
+            stroke: colormap,
           });
-          lastX += colAndRowNumber;
+          lastX += sizeSnake;
         }
-
-        [color1choose, color2choose] = [color2choose, color1choose];
         lastX = 0;
-        lastY += colAndRowNumber;
+        lastY += sizeSnake;
       }
     },
 
@@ -145,5 +201,4 @@ export default {
   },
 };
 </script>
-<style>
-</style>
+<style></style>
