@@ -8,21 +8,17 @@
 Link to play multiple games : https://vuekonva-hakamate.netlify.app
 
 ## Project setup
-```
-yarn install
-```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+```bash
+# install dependencies
+$ yarn install
 
-### Compiles and minifies for production
-```
-yarn build
-```
+# Compiles and hot-reloads for development
+$ yarn serve
 
-### Lints and fixes files
-```
-yarn lint
+# Compiles and minifies for production
+$ yarn build
+
+# Lints and fixes files
+$ yarn lint
 ```
