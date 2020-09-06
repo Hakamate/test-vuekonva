@@ -1,7 +1,7 @@
-# H-VueKonva-MultipleGame
-![H-VueKonva Snake](https://i.ibb.co/Zdv0wbC/snake-vuekonva.jpg)
+# VueKonva-MultipleGame
+![VueKonva Snake](https://i.ibb.co/Zdv0wbC/snake-vuekonva.jpg)
 
-**H-VueKonva-MultipleGame** is a Vue App using VueKonva to make Canvas game
+**VueKonva-MultipleGame** is a Vue App using VueKonva to make Canvas game
 
 ## Cant try it 
 
